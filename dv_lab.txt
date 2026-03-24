@@ -1,0 +1,252 @@
+1. VADeaths Dataset: Load dataset, convert to dataframe, use hist() for multiple histograms. 
+
+data("VADeaths")
+
+va_df <- as.data.frame(VADeaths)
+print(head(va_df))
+
+par(mfrow = c(2, 2))
+
+hist(va_df$`Rural Male`,
+main = "Histogram of Rural Male Death Rates",
+xlab = "Death Rate per 1000",
+col = "skyblue",
+border = "black",
+xlim = c(5, 45),
+ylim = c(0, 3))
+
+hist(va_df$`Rural Female`,
+main = "Histogram of Rural Female Death Rates",
+xlab = "Death Rate per 1000",
+col = "lightgreen",
+border = "black",
+xlim = c(5, 45),
+ylim = c(0, 3))
+
+hist(va_df$`Urban Male`,
+main = "Histogram of Urban Male Death Rates",
+xlab = "Death Rate per 1000",
+col = "salmon",
+border = "black",
+xlim = c(5, 45),
+ylim = c(0, 3))
+
+hist(va_df$`Urban Female`,
+main = "Histogram of Urban Female Death Rates",
+xlab = "Death Rate per 1000",
+col = "orchid",
+border = "black",
+xlim = c(5, 45),
+ylim = c(0, 3))
+
+par(mfrow = c(1, 1))
+
+
+______________________________________________________________________________________________________
+
+
+2. Airquality Temp Histogram: Load airquality dataset and plot histogram of Temp. 
+
+data("airquality")
+head(airquality)
+
+hist(airquality$Temp,
+main = "La Guardia Airport Daily Max Temperature",
+xlab = "Temperature (°F)",
+ylab = "Frequency",
+col = "orange",
+border = "black",
+breaks = 10)
+__________________________________________________________________________________
+
+3. AirPassengers Line Chart: Use plot() to show time series growth. 
+
+data("AirPassengers")
+
+plot(AirPassengers,
+main = "Increase in Air Passengers (1949-1960)",
+xlab = "Year",
+ylab = "Passengers (in thousands)",
+col = "blue",
+lwd = 2)
+
+__________________________________________________________________________________________
+
+4. Iris Bar Charts: Use ggplot2 for species count and stacked plots. 
+
+install.packages("ggplot2", repos = "https://cloud.r-project.org")
+install.packages("tidyr", repos = "https://cloud.r-project.org")
+
+library(ggplot2)
+library(tidyr)
+
+data(iris)
+head(iris)
+
+ggplot(iris, aes(x = Species, fill = Species)) +
+ geom_bar() +
+ labs(title = "Count of Each Species", y = "Count") +
+ theme_minimal()
+
+iris_means <- aggregate(. ~ Species, data = iris, mean)
+
+ggplot(iris_means, aes(x = Species, y = Sepal.Length, fill = Species)) +
+ geom_bar(stat = "identity") +
+ labs(title = "Average Sepal Length - By Species", y = "Average Length (cm)")
+
+iris_long <- pivot_longer(iris, cols = 1:4,
+names_to = "Measurement", values_to = "Value")
+
+iris_long_means <- aggregate(Value ~ Species + Measurement,
+data = iris_long, mean)
+
+ggplot(iris_long_means, aes(x = Species, y = Value, fill = Measurement)) +
+ geom_bar(stat = "identity", position = "stack") +
+ labs(title = "Stacked Measurements - 2026 Analysis", y = "Total Size (cm)") +
+ theme_light()
+_________________________________________________________________________________________________
+
+5. Airquality Ozone: Plot histogram and boxplot for ozone levels. 
+
+data("airquality")
+head(airquality)
+
+hist(airquality$Ozone,
+main = "Histogram of Ozone Concentration (NY 1973)",
+xlab = "Ozone (parts per billion)",
+col = "lightblue",
+border = "black",
+breaks = 15)
+
+boxplot(Ozone ~ Month,
+data = airquality,
+main = "Ozone Levels by Month",
+xlab = "Month (5=May, 9=Sept)",
+ylab = "Ozone (ppb)",
+col = "lightgreen")
+
+____________________________________________________________________________________________________
+
+6. Iris Boxplots: Grouped boxplots using ggplot2 and color palettes. 
+
+data(iris)
+head(iris)
+
+boxplot(Sepal.Length ~ Species,
+data = iris,
+main = "Sepal Length by Species",
+xlab = "Species",
+ylab = "Sepal Length (cm)",
+col = c("lightblue", "salmon", "lightgreen"))
+
+library(ggplot2)
+
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+ geom_boxplot() +
+ scale_fill_brewer(palette = "Set2") +
+ labs(title = "Box Plot of Sepal Width by Species",
+ x = "Species",
+ y = "Sepal Width (cm)") +
+ theme_minimal()
+__________________________________________________________________________________
+
+7. Airquality Boxplots: Compare Ozone, Solar.R, Wind, Temp using boxplot. 
+data("airquality")
+head(airquality)
+
+boxplot(airquality$Ozone,
+main="Ozone Level Distribution",
+col="skyblue",
+ylab="Ozone (ppb)")
+
+boxplot(airquality[, 1:4],
+main="Air Quality Parameters",
+col=c("red", "blue", "green", "yellow"))
+
+boxplot(Temp ~ Month,
+data=airquality,
+main="Temperature by Month",
+xlab="Month",
+ylab="Temp (F)",
+col="orange")
+
+______________________________________________________________________________________
+
+8. Iris Scatter: Simple, multivariate scatter and pairs() matrix. 
+
+data("iris")
+
+plot(iris$Sepal.Length, iris$Sepal.Width,
+col=iris$Species,
+main="Scatter Plot")
+
+pairs(iris[,1:4], col=iris$Species)
+________________________________________________________________________________
+
+9. Diamonds Dataset: Use hexbin for large data visualization. 
+
+library(ggplot2)
+
+ggplot(diamonds, aes(x=carat, y=price)) +
+ geom_hex() +
+ labs(title="Hexbin Plot")
+______________________________________________________________________________
+
+10. HairEyeColor: Use mosaic plot for categorical data. 
+data("HairEyeColor")
+
+mosaicplot(HairEyeColor,
+main="Mosaic Plot",
+color=TRUE)
+
+___________________________________________________________________________
+
+11. mtcars Heatmap: Use heatmap() for correlation visualization. 
+
+data("mtcars")
+
+heatmap(as.matrix(mtcars),
+main="Heatmap of mtcars")
+____________________________________________________________________________
+
+12. Leaflet Maps: Install leaflet and create interactive maps. 
+install.packages("leaflet")
+library(leaflet)
+
+leaflet() %>%
+ addTiles() %>%
+ addMarkers(lng=77.5946, lat=12.9716)
+_____________________________________________________________________________
+
+13. 3D Iris Plots: Use scatterplot3d or cloud plots. 
+
+install.packages("scatterplot3d")
+library(scatterplot3d)
+
+scatterplot3d(iris$Sepal.Length,
+iris$Sepal.Width,
+iris$Petal.Length,
+color="blue",
+pch=16)
+________________________________________________________________________________
+
+14. Correlogram: Use corrplot for correlation matrix. 
+install.packages("corrplot")
+library(corrplot)
+
+cor_matrix <- cor(mtcars)
+
+corrplot(cor_matrix,
+method="circle")
+
+________________________________________________________________________________
+
+15. Maps Library: Use maps package for geographic visualization.
+
+install.packages("maps")
+library(maps)
+
+map("world",
+col="lightblue",
+fill=TRUE)
+
