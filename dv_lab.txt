@@ -148,6 +148,12 @@ ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
  x = "Species",
  y = "Sepal Width (cm)") +
  theme_minimal()
+
+par(mfrow = c(1, 4)) 
+boxplot(Sepal.Length ~ Species, data = iris, col = topo.colors(3), main = "Sepal Length") 
+boxplot(Sepal.Width ~ Species, data = iris, col = heat.colors(3), main = "Sepal Width") 
+boxplot(Petal.Length ~ Species, data = iris, col = terrain.colors(3), main = "Petal Length") 
+boxplot(Petal.Width ~ Species, data = iris, col = rainbow(3), main = "Petal Width") 
 __________________________________________________________________________________
 
 7. Airquality Boxplots: Compare Ozone, Solar.R, Wind, Temp using boxplot. 
