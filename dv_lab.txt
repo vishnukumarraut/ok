@@ -1,51 +1,28 @@
-1. VADeaths Dataset: Load dataset, convert to dataframe, use hist() for multiple histograms. 
+1.Load VA Deaths (Death Rates in Virginia) dataset in R and visualize the data using different histograms.
 
-data("VADeaths")
+data(VADeaths)
 
-va_df <- as.data.frame(VADeaths)
-print(head(va_df))
+print(VADeaths)   # table output
 
-par(mfrow = c(2, 2))
+par(mfrow = c(2,2))
 
-hist(va_df$`Rural Male`,
-main = "Histogram of Rural Male Death Rates",
-xlab = "Death Rate per 1000",
-col = "skyblue",
-border = "black",
-xlim = c(5, 45),
-ylim = c(0, 3))
+cols <- c("skyblue","lightgreen","salmon","orchid")
 
-hist(va_df$`Rural Female`,
-main = "Histogram of Rural Female Death Rates",
-xlab = "Death Rate per 1000",
-col = "lightgreen",
-border = "black",
-xlim = c(5, 45),
-ylim = c(0, 3))
+for(i in 1:4){
+  hist(VADeaths[,i],
+       main = paste("Histogram of", colnames(VADeaths)[i], "Death Rates"),
+       xlab = "Death Rate per 1000",
+       col = cols[i],
+       border = "black",
+       xlim = c(5,45),
+       ylim = c(0,3))
+}
+par(mfrow = c(1,1))
 
-hist(va_df$`Urban Male`,
-main = "Histogram of Urban Male Death Rates",
-xlab = "Death Rate per 1000",
-col = "salmon",
-border = "black",
-xlim = c(5, 45),
-ylim = c(0, 3))
-
-hist(va_df$`Urban Female`,
-main = "Histogram of Urban Female Death Rates",
-xlab = "Death Rate per 1000",
-col = "orchid",
-border = "black",
-xlim = c(5, 45),
-ylim = c(0, 3))
-
-par(mfrow = c(1, 1))
+_________________________________________________________________________________________________________________
 
 
-______________________________________________________________________________________________________
-
-
-2. Airquality Temp Histogram: Load airquality dataset and plot histogram of Temp. 
+2.Load air quality dataset in R and visualize La Guardia Airport’s daily maximum temperature using histogram. 
 
 data("airquality")
 head(airquality)
@@ -57,9 +34,9 @@ ylab = "Frequency",
 col = "orange",
 border = "black",
 breaks = 10)
-__________________________________________________________________________________
+_________________________________________________________________________________________________________________________________________
 
-3. AirPassengers Line Chart: Use plot() to show time series growth. 
+3. AiLoad Air Passengers dataset in R and visualize the data using line chart that shows increase in air passengers over given time period.
 
 data("AirPassengers")
 
@@ -70,43 +47,30 @@ ylab = "Passengers (in thousands)",
 col = "blue",
 lwd = 2)
 
-__________________________________________________________________________________________
+_________________________________________________________________________________________________________________________
 
-4. Iris Bar Charts: Use ggplot2 for species count and stacked plots. 
+4.Load iris dataset in R, visualize the data using different Bar Charts and also demonstrate the use of stacked plots.
 
-install.packages("ggplot2", repos = "https://cloud.r-project.org")
-install.packages("tidyr", repos = "https://cloud.r-project.org")
+library(ggplot2); library(tidyr)
 
-library(ggplot2)
-library(tidyr)
+print(head(iris))   # table
 
-data(iris)
-head(iris)
+# Count Bar Chart
+ggplot(iris, aes(Species, fill=Species)) + geom_bar()
 
-ggplot(iris, aes(x = Species, fill = Species)) +
- geom_bar() +
- labs(title = "Count of Each Species", y = "Count") +
- theme_minimal()
+# Mean Bar Chart
+ggplot(aggregate(Sepal.Length~Species, iris, mean),
+       aes(Species, Sepal.Length, fill=Species)) +
+  geom_bar(stat="identity")
 
-iris_means <- aggregate(. ~ Species, data = iris, mean)
+# Stacked Bar Chart
+ggplot(aggregate(value~Species+name, pivot_longer(iris,1:4), mean),
+       aes(Species, value, fill=name)) +
+  geom_bar(stat="identity")
 
-ggplot(iris_means, aes(x = Species, y = Sepal.Length, fill = Species)) +
- geom_bar(stat = "identity") +
- labs(title = "Average Sepal Length - By Species", y = "Average Length (cm)")
-
-iris_long <- pivot_longer(iris, cols = 1:4,
-names_to = "Measurement", values_to = "Value")
-
-iris_long_means <- aggregate(Value ~ Species + Measurement,
-data = iris_long, mean)
-
-ggplot(iris_long_means, aes(x = Species, y = Value, fill = Measurement)) +
- geom_bar(stat = "identity", position = "stack") +
- labs(title = "Stacked Measurements - 2026 Analysis", y = "Total Size (cm)") +
- theme_light()
 _________________________________________________________________________________________________
 
-5. Airquality Ozone: Plot histogram and boxplot for ozone levels. 
+5.Load air quality dataset in R and visualize ozone concentration in air.
 
 data("airquality")
 head(airquality)
@@ -125,9 +89,9 @@ xlab = "Month (5=May, 9=Sept)",
 ylab = "Ozone (ppb)",
 col = "lightgreen")
 
-____________________________________________________________________________________________________
+_________________________________________________________________________________________________________________________________________
 
-6. Iris Boxplots: Grouped boxplots using ggplot2 and color palettes. 
+6. Load iris dataset in R, visualize the data using different Box plots including group by option and also use color palette to represent species
 
 data(iris)
 head(iris)
@@ -149,14 +113,11 @@ ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
  y = "Sepal Width (cm)") +
  theme_minimal()
 
-par(mfrow = c(1, 4)) 
-boxplot(Sepal.Length ~ Species, data = iris, col = topo.colors(3), main = "Sepal Length") 
-boxplot(Sepal.Width ~ Species, data = iris, col = heat.colors(3), main = "Sepal Width") 
-boxplot(Petal.Length ~ Species, data = iris, col = terrain.colors(3), main = "Petal Length") 
-boxplot(Petal.Width ~ Species, data = iris, col = rainbow(3), main = "Petal Width") 
-__________________________________________________________________________________
 
-7. Airquality Boxplots: Compare Ozone, Solar.R, Wind, Temp using boxplot. 
+___________________________________________________________________________________________________
+
+7. Load air quality dataset in R and visualize air quality parameters using box plots.
+
 data("airquality")
 head(airquality)
 
@@ -176,46 +137,67 @@ xlab="Month",
 ylab="Temp (F)",
 col="orange")
 
-______________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________
 
-8. Iris Scatter: Simple, multivariate scatter and pairs() matrix. 
+8. Visualize iris dataset using simple scatter, multivariate scatter plot and also visualize scatter plot matrix to visualize multiple variables across each other.
 
-data("iris")
+data(iris)
 
+# Scatter Plot
 plot(iris$Sepal.Length, iris$Sepal.Width,
-col=iris$Species,
-main="Scatter Plot")
+     col = as.numeric(iris$Species),
+     main = "Scatter Plot")
 
-pairs(iris[,1:4], col=iris$Species)
-________________________________________________________________________________
+# Scatter Matrix
+pairs(iris[,1:4],
+      col = as.numeric(iris$Species))
+_____________________________________________________________________________________________________________________________________________
 
-9. Diamonds Dataset: Use hexbin for large data visualization. 
+9. Load diamonds dataset in R and visualize the structure in datasets with large data points using hexagon binning and also add color palette.
+install.packages("hexbin")
 
+library(hexbin)
 library(ggplot2)
 
-ggplot(diamonds, aes(x=carat, y=price)) +
- geom_hex() +
- labs(title="Hexbin Plot")
-______________________________________________________________________________
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_hex() +
+  labs(title = "Hexbin Plot")
 
-10. HairEyeColor: Use mosaic plot for categorical data. 
+library(ggplot2)
+library(RColorBrewer)
+
+ggplot(diamonds, aes(carat, price)) +
+  geom_hex(bins = 50) +
+  scale_fill_gradientn(colors = rev(brewer.pal(11, "Spectral"))) +
+  theme_dark() +
+  labs(fill = "Count", x = "Carat Weight", y = "Price ($)")
+__________________________________________________________________________________
+
+10. Load Hair Eye Color dataset in R and plot categorical data using mosaic plot. 
+data("HairEyeColor") 
+# View the structure (it's a 3D table: Hair x Eye x Sex) 
+print(HairEyeColor)
+
+mosaicplot(HairEyeColor, shade = TRUE)
+
 data("HairEyeColor")
-
 mosaicplot(HairEyeColor,
 main="Mosaic Plot",
 color=TRUE)
 
 ___________________________________________________________________________
 
-11. mtcars Heatmap: Use heatmap() for correlation visualization. 
-
-data("mtcars")
+11. Load mtcars dataset in R and visualize data using heat map.
 
 heatmap(as.matrix(mtcars),
-main="Heatmap of mtcars")
+        scale = "column",
+        col = cm.colors(256),
+        main = "Heatmap of mtcars Dataset",
+        xlab = "Car Specifications",
+        ylab = "Car Models")
 ____________________________________________________________________________
 
-12. Leaflet Maps: Install leaflet and create interactive maps. 
+12.Install leaflet library in R and perform different map visualizations.
 install.packages("leaflet")
 library(leaflet)
 
@@ -224,30 +206,37 @@ leaflet() %>%
  addMarkers(lng=77.5946, lat=12.9716)
 _____________________________________________________________________________
 
-13. 3D Iris Plots: Use scatterplot3d or cloud plots. 
+13. Visualize iris dataset using 3D graphs such as scatter3d, cloud, xyplot.
 
-install.packages("scatterplot3d")
-library(scatterplot3d)
 
-scatterplot3d(iris$Sepal.Length,
-iris$Sepal.Width,
-iris$Petal.Length,
-color="blue",
-pch=16)
+library(lattice)
+
+cloud(Petal.Length ~ Sepal.Length * Sepal.Width,
+      data = iris,
+      groups = Species,
+      auto.key = TRUE,
+      main = "Iris Cloud Plot")
 ________________________________________________________________________________
 
-14. Correlogram: Use corrplot for correlation matrix. 
-install.packages("corrplot")
+14. Make use of correlogram to visualize data in correlation matrices for iris dataset.
 library(corrplot)
 
-cor_matrix <- cor(mtcars)
+# Correlation matrix
+corr <- cor(iris[,1:4])
 
-corrplot(cor_matrix,
-method="circle")
+# Circle plot
+corrplot(corr, method="circle")
+
+# Mixed plot
+corrplot.mixed(corr, lower="number", upper="circle")
+
+# Pair plot
+pairs(iris[,1:4], col=as.numeric(iris$Species), pch=19)
+
 
 ________________________________________________________________________________
 
-15. Maps Library: Use maps package for geographic visualization.
+15. Install maps library in R and draw different map visualizations.
 
 install.packages("maps")
 library(maps)
